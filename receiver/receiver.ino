@@ -1,4 +1,3 @@
-
 const int LDR_PIN = A0;
 
 int BIT_TIME_MS = 45;
@@ -22,9 +21,9 @@ void loop() {
     String cmd = Serial.readStringUntil('\n');
     cmd.trim();
     if (cmd.startsWith("TH:")) {
-      THRESHOLD = cmd.substring(3).toInt();
+      THRESHOLD = constrain(cmd.substring(3).toInt(), 10, 1020);
     } else if (cmd.startsWith("SPD:")) {
-      BIT_TIME_MS = constrain(cmd.substring(4).toInt(), 15, 250);
+      BIT_TIME_MS = constrain(cmd.substring(4).toInt(), 5, 500);
     }
   }
 
@@ -37,7 +36,7 @@ void loop() {
       rxBitIdx = 0;
       rxCurrentByte = 0;
       // Sample 1.5 bit widths later to hit the dead center of bit 0
-      nextRxSampleMicros = nowMicros + (unsigned long)(BIT_TIME_MS * 1500UL);
+      nextRxSampleMicros = nowMicros + ((unsigned long)BIT_TIME_MS * 1500UL);
     }
   } else {
     if ((long)(nowMicros - nextRxSampleMicros) >= 0) {
